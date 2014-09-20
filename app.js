@@ -16,6 +16,8 @@ var shutDown = schedule.scheduleJob(shutDownRule, function(){
 
 var startUpRule = new schedule.RecurrenceRule();
 startUpRule.hour = 6;
+startUpRule.minute = 0;
+
 
 var shutDown = schedule.scheduleJob(startUpRule, function(){
     StartUp();
@@ -23,19 +25,23 @@ var shutDown = schedule.scheduleJob(startUpRule, function(){
 
 function ShutDown() {
 	var sql = "UPDATE tomtom.config SET ConfigValue = 0 where ConfigKey like 'crs.amadeus.enable' and Partnerid = 79";
+	connection.connect();
 	connection.query(sql, function(err, rows, fields) {
 		if(err)
 			console.log(err);
 		console.log("Shutted down Swalo @ " + new Date());
 
-	});	
+	});
+	connection.end();	
 }
 
 function StartUp() {
 	var sql = "UPDATE tomtom.config SET ConfigValue = 1 where ConfigKey like 'crs.amadeus.enable' and Partnerid = 79";
+	connection.connect();
 	connection.query(sql, function(err, rows, fields) {
 		if(err)
 			console.log(err);
 		console.log("Started up   Swalo @ " + new Date());
-	});	
+	});
+	connection.end();	
 }
